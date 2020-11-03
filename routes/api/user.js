@@ -3,19 +3,12 @@ const router = new Router();
 
 const jwt = require('jsonwebtoken');
 
+// 区分路由路径
+router.prefix('/api/user');
+
 // 引入user
 const User = require("../../modules/User");
-/** 
- *  @roter  get api/user/test
- *  @desc 测试接口
-*/
 
-router.get('/test', async ctx => {
-  ctx.status = 200;
-  ctx.body = {
-    msg: "hellow test ge"
-  }
-})
 
 /** 
  *  @roter  POST api/user/Sign Up
@@ -76,4 +69,4 @@ router.post('/login', async ctx => {
   }
 })
 
-module.exports = router.routes();
+module.exports = router
