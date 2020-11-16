@@ -21,9 +21,16 @@ const app = new koa();
 const router = new Router();
 const bodyParser = require('koa-bodyparser');
 
+// const catching=require("./middleware/catchCode")
 
+// app.use(catching);
+//引入中间件
 app.use(bodyParser());
 
+// 引入自定义中间件
+const middleware = require("./middleware")
+
+middleware(app)
 //引入多个路由
 const routing = require("./routes/api/index")
 routing(app)

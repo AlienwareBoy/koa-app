@@ -1,56 +1,35 @@
+const { SUCCESS, NOT_FOUND_ERROR } = require("../utils/status-code")
+// 引入user模型
+const UserModel = require("../models/User");
 const jwt = require('jsonwebtoken');
 
 class User {
   async register(ctx) {
-    const { name, password } = ctx.request.body;
-    const result = await User.find({ name });
+    const { account, password } = ctx.request.body;
+    const result = await UserModel.find({ account });
     if (result.length > 0) {
-      ctx.status = 200;
-      ctx.body = '名字已经被占用'
-      console.log("被占用")
+      await NOT_FOUND_ERROR(ctx, { msg: '用户已注册', code: 404 })
     } else {
-      const newUser = new User({ name, password });
-      await newUser.save().then(user => {
-        ctx.body = {
-          msg: '注册成功',
-          result: user
-        };
-        console.log("注册成功")
-      }).catch(err => {
-        // console.log(err)
+      const newUser = new UserModel({ account, password });
+      await newUser.save().then(async user => {
+        await SUCCESS(ctx)
       })
-      ctx.body = newUser
     }
   }
- async login(ctx){
+  async login(ctx) {
     const { account, password } = ctx.request.body;
-    const result = await User.findOne({ account });
+    const result = await UserModel.findOne({ account });
+    console.log(result)
     if (!result) {
-      ctx.body= {
-        status: 304,
-        msg: '未注册，请注册后重试'
-      }
-    }
-    else if (account.length > 0) {
-      ctx.body= {
-        state: 304,
-        body: '账号被使用,请重试'
-      }
+      await NOT_FOUND_ERROR(ctx, { msg: '用户未注册' })
     } else {
-      const newUser = new User({ name, password });
-      await newUser.save().then(user => {
-        ctx.body = {
-          msg: '注册成功',
-          result: user
-        };
-        console.log("注册成功")
-      }).catch(err => {
-        // console.log(err)
-      })
-      ctx.body = newUser
+      const token = jwt.sign({
+        name: result.account,
+        _id: result._id
+      }, 'admin-pc', { expiresIn: '2h' });
+      await await SUCCESS(ctx, { msg: '登录成功',data:{token}})
     }
   }
 }
-
 
 module.exports = new User();
