@@ -1,37 +1,39 @@
 class StatusCode {
-  constructor(data, httpCode, errMsg) {
+  constructor(data,msg,httpCode) {
     this.httpCode = httpCode;
-    this.errMsg = errMsg;
+    this.msg = msg;
     this.data = data
   }
   success(ctx) {
     ctx.body = {
       code: 200,
-      msg: this.errMsg,
+      msg: this.msg,
       data: this.data
     }
   }
   error(ctx) {
-    console.log('---------2--------')
-    ctx.throw(this.httpCode, this.errMsg, this.data)
+    ctx.throw(this.httpCode, this.msg, {
+      code:this.httpCode,
+      msg:this.msg,
+    })
   }
 }
 class Success extends StatusCode {
-  constructor(errMsg = '请求成功', data, httpCode = 200) {
-    super(data, httpCode, errMsg)
+  constructor(data,msg) {
+    super(data,msg,200)
   }
 }
 class NotFound extends StatusCode {
-  constructor(httpCode = 200, data, errMsg) {
-    super(data, httpCode, errMsg)
+  constructor(data,msg) {
+    super(data,msg,404)
   }
 }
 
 //成功
-const SUCCESS = async (ctx, { msg, data }) => new Success(msg, data).success(ctx);
+const SUCCESS = async (ctx, data,msg="请求成功") => new Success(data,msg).success(ctx);
 
 //失败
-const NOT_FOUND_ERROR = async (ctx, { msg = '缺少参数', code = 404 }) => new NotFound(404, '缺少参数', { msg, code }).error(ctx);
+const NOT_FOUND_ERROR = async (ctx, data={},msg="未找到相关资源") => new NotFound(data,msg).error(ctx);
 
 module.exports = {
   SUCCESS,
