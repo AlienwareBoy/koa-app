@@ -8,7 +8,7 @@ class StatusCode {
     ctx.body = {
       code: 200,
       msg: this.msg,
-      data: this.data
+      ...this.data
     }
   }
   error(ctx) {

@@ -31,11 +31,10 @@ app.use(bodyParser());
 const middleware = require("./middleware")
 
 middleware(app)
-//引入多个路由
 const routing = require("./routes/api/index")
 routing(app)
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log('app start', port)
