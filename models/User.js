@@ -10,6 +10,9 @@ const UserSchema = new Schema({
   password: {
     type: String,
   },
+  roles:{
+    type:Array,
+  },
   date: {
     type: Date,
     default: Date.now,

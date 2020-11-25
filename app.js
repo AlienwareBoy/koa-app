@@ -5,7 +5,7 @@ const Router = require("koa-router");
 
 //连接数据库
 const mongoose = require("mongoose");
-const db = require("./config/index")
+const db = require("./config")
 mongoose.connect(
   db.mongoUrl,
   db.config,

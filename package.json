@@ -16,6 +16,7 @@
     "koa-bodyparser": "^4.3.0",
     "koa-jwt": "^4.0.0",
     "koa-router": "^9.4.0",
-    "mongoose": "^5.10.9"
+    "mongoose": "^5.10.9",
+    "promise": "^8.1.0"
   }
 }
