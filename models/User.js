@@ -10,8 +10,8 @@ const UserSchema = new Schema({
   password: {
     type: String,
   },
-  roles:{
-    type:Array,
+  role:{
+    type:String,
   },
   date: {
     type: Date,

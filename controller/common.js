@@ -1,8 +1,9 @@
-const { NOT_FOUND_ERROR, SUCCESS } = require("../utils/status-code");
+const { NOT_FOUND_ERROR, SUCCESS,NOT_FOUND_TOKEN } = require("../utils/status-code");
 const jwt = require("jsonwebtoken");
 const util = require("util");
 const verify = util.promisify(jwt.verify); // 将jwt.verify函数promise化
 const { SECRET } = require("../config");
+const UserModel = require("../models/User");
 class Common {
   async test(ctx, next) {
     const { id } = ctx.query;
@@ -10,27 +11,29 @@ class Common {
   }
   async info(ctx, next) {
     const token = ctx.header.authorization;
-    console.log('用户',token)
-    if(token){
-       let decoded = jwt.decode(token, SECRET);
-       if(token && decoded.exp <= new Date()/1000){
-            return res.json({ success: false, message: 'token过期' });
-        }else{
-            // return next();
-        }
-    }else{
+    console.log(token);
+    if (token) {
+      try {
+        let payload = await verify(token.split(" ")[1], SECRET);
+        const result = await UserModel.findOne({ account: payload.name });
+        console.log("解密", result);
+        await SUCCESS(ctx, { data: result });
+      } catch (err) {
+        await NOT_FOUND_TOKEN(ctx,"token失效，请重新登录");
+        console.log("失效了");
+        console.log(err);
+      }
+    } 
 
-    }
-    // try {
-    //   const payload = await verify(token.split(" ")[1], SECRET);
-    //   console.log('用户信息',payload)
-    //   await SUCCESS(ctx, { userInfo: payload });
-    // } catch (err) {
-    //   console.error(err);
-    //   ctx.body = {
-    //     errno: -1,
-    //     msg: "Verify token failed.",
-    //   };
+    // if(token){
+
+    //    if(token && decoded.exp <= new Date()/1000){
+    //         return res.json({ success: false, message: 'token过期' });
+    //     }else{
+    //         // return next();
+    //     }
+    // }else{
+
     // }
   }
 }

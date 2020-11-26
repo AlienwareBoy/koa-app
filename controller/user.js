@@ -16,7 +16,7 @@ class User {
     const newUser = new UserModel({
       account,
       password: hash,
-      roles: ["admin"],
+      role: 'user',
     });
     await newUser.save().then(async (user) => {
       await SUCCESS(ctx, {}, "注册成功");
@@ -39,11 +39,11 @@ class User {
           _id: result._id,
         },
         SECRET,
-        { expiresIn: "5s" }
+        { expiresIn: "1h" }
       );
       await SUCCESS(ctx, {
         msg: "登录成功",
-        data: { id: result.id, token, account, roles: result.roles },
+        data: { id: result.id, token, account, role: result.role },
       });
     }
   }
