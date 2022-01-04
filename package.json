@@ -4,19 +4,22 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "serve": "nodemon app.js"
+    "start": "cross-env PORT=3000  node app.js",
+    "serve": "pm2 start app.js --watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cross-env": "^7.0.3",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
-    "koa-bodyparser": "^4.3.0",
+    "koa-body": "^4.2.0",
     "koa-jwt": "^4.0.0",
     "koa-router": "^9.4.0",
+    "koa2-cors": "^2.0.6",
     "mongoose": "^5.10.9",
+    "pm2": "^5.1.2",
     "promise": "^8.1.0"
   }
 }

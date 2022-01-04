@@ -18,22 +18,25 @@ mongoose.connect(
 
 
 const app = new koa();
-const router = new Router();
-const bodyParser = require('koa-bodyparser');
+const cors = require('koa2-cors');
+const koaBody = require('koa-body')
 
 // const catching=require("./middleware/catchCode")
 
 // app.use(catching);
 //引入中间件
-app.use(bodyParser());
-
+app.use(koaBody({
+  multipart: true,
+  json: true
+}));
+app.use(cors());
 // 引入自定义中间件
 const middleware = require("./middleware")
 
 middleware(app)
 const routing = require("./routes/api/index")
 routing(app)
-
+console.log(process.env.PORT,'process.env.PORT')
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {

@@ -5,8 +5,13 @@ const { SECRET } = require("../config");
 const UserModel = require("../models/User");
 const jwt = require("jsonwebtoken");
 class User {
-  async register(ctx) {
+  async testPost(ctx) {
     const { account, password } = ctx.request.body;
+    console.log('test success')
+  }
+  async register(ctx) {
+    const { account, password } =JSON.parse(ctx.request.body) || {};
+    console.log(account, password, '--------account, password---------');
     const result = await UserModel.findOne({ account });
     console.log(result);
     if (result) {
@@ -23,7 +28,8 @@ class User {
     });
   }
   async login(ctx) {
-    const { account, password } = ctx.request.body;
+    const { account, password } = JSON.parse(ctx.request.body) || {};
+    console.log(ctx.request.body, '--------result----------')
     const result = await UserModel.findOne({ account });
     if (!result) {
       await NOT_FOUND_ERROR(ctx, {}, "账号未注册");
@@ -32,7 +38,7 @@ class User {
     if (!checkPassword) {
       await NOT_FOUND_ERROR(ctx, {}, "密码错误");
     } else {
-      console.log('---------',SECRET)
+      console.log('---------', SECRET)
       const token = jwt.sign(
         {
           name: result.account,

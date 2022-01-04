@@ -10,6 +10,7 @@ module.exports = async (ctx, next) => {
   } catch (err) {
     console.log('----进入报错信息显示--')
     console.log(err)
+    console.log('-----error--------')
     format(ctx, err)
   }
 }
