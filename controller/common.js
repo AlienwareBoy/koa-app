@@ -1,9 +1,10 @@
-const { NOT_FOUND_ERROR, SUCCESS,NOT_FOUND_TOKEN } = require("../utils/status-code");
+const { NOT_FOUND_ERROR, SUCCESS, NOT_FOUND_TOKEN } = require("../utils/status-code");
 const jwt = require("jsonwebtoken");
 const util = require("util");
 const verify = util.promisify(jwt.verify); // 将jwt.verify函数promise化
 const { SECRET } = require("../config");
 const UserModel = require("../models/User");
+const { exec } = require('child_process');
 class Common {
   async test(ctx, next) {
     const { id } = ctx.query;
@@ -19,11 +20,11 @@ class Common {
         console.log("解密", result);
         await SUCCESS(ctx, { data: result });
       } catch (err) {
-        await NOT_FOUND_TOKEN(ctx,"token失效，请重新登录");
+        await NOT_FOUND_TOKEN(ctx, "token失效，请重新登录");
         console.log("失效了");
         console.log(err);
       }
-    } 
+    }
 
     // if(token){
 
@@ -35,6 +36,18 @@ class Common {
     // }else{
 
     // }
+  }
+  async getWebHook(ctx, next) {
+    exec('cat *.js missing_file | wc -l', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`执行出错: ${error}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+    });
+    console.log(ctx, '-------ctx')
+    console.log(next, '----------next')
   }
 }
 
